@@ -20,7 +20,33 @@ namespace GradeBook
       }
       else
       {
-        Console.WriteLine("Invalid Value")
+        throw new ArgumentException($"Invalid {nameof(grade)}");
+      }
+    }
+
+    public void AddLetterGrade(char letter)
+    {
+      switch (letter)
+      {
+          case 'A':
+            AddGrade(90);
+            break;
+
+          case 'B':
+            AddGrade(80);
+            break;
+
+          case 'C':
+            AddGrade(70);
+            break;
+
+          case 'D':
+            AddGrade(60);
+            break;
+
+          default:
+            AddGrade(0);
+            break;
       }
     }
 
@@ -31,14 +57,43 @@ namespace GradeBook
       result.High = double.MinValue;
       result.Low = double.MaxValue;
 
-      foreach (double grade in this.grades)
+      if (this.grades.Count == 0)
       {
-        result.Low = Math.Min(grade, result.Low);
-        result.High = Math.Max(grade, result.High);
-        result.Average += grade;
+          return result;
       }
 
+      // foreach (double grade in this.grades)
+      for (int index = 0; index < this.grades.Count; index += 1)
+      {
+        result.Low = Math.Min(this.grades[index], result.Low);
+        result.High = Math.Max(this.grades[index], result.High);
+        result.Average += this.grades[index];
+      }
+  
       result.Average /= this.grades.Count;
+
+      switch (result.Average)
+      {
+          case var d when d >= 90.0:
+            result.Letter = 'A';
+            break;
+
+          case var d when d >= 80.0:
+            result.Letter = 'B';
+            break;
+
+          case var d when d >= 70.0:
+            result.Letter = 'C';
+            break;
+
+          case var d when d >= 60.0:
+            result.Letter = 'D';
+            break;
+
+          default:
+            result.Letter = 'F';
+            break;
+      }
 
       return result;
     }
