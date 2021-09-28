@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace GradeBook
 {
+  public delegate void GradeAddedDelegate(object sender, EventArgs args);
   public class Book
   {
     // Class Constructor is public & uses same name as class.
@@ -10,21 +11,24 @@ namespace GradeBook
     {
       this.grades = new List<double>();
       Name = name;
-    }
-    
+    }    
     public void AddGrade(double grade)
     {
       if (grade <= 100 && grade >= 0)
       {
         this.grades.Add(grade);
+        if(GradeAdded != null)
+        {
+          GradeAdded(this, new EventArgs());
+        }
       }
-      else
-      {
-        throw new ArgumentException($"Invalid {nameof(grade)}");
-      }
+      // else
+      // {
+      //   throw new ArgumentException($"Invalid {nameof(grade)}");
+      // }
     }
 
-    public void AddLetterGrade(char letter)
+    public void AddGrade(char letter)
     {
       switch (letter)
       {
@@ -100,6 +104,21 @@ namespace GradeBook
 
     // Fields.
     private List<double> grades;
-    public string Name;
+
+    public event GradeAddedDelegate GradeAdded;
+
+    // Properties.
+    // Long hand syntax
+    public string Name
+    {
+        get; set;
+        // private set;
+    }
+
+    // Short hand syntax
+    // readonly string CATEGORY = "Science";
+    // const field is a static member and it can't be accessed via an object reference,
+    // const can obly be accessed by using the type name (the class name)
+    public const string CATEGORY = "Science";
   }
 }
